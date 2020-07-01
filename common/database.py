@@ -17,3 +17,11 @@ class Database:
     @staticmethod
     def find_one(collection: str, query: dict) -> dict:
         return Database.DATABASE[collection].find_one(query)
+
+    @staticmethod
+    def update(collection: str, query: dict, data: dict):
+        Database.DATABASE[collection].update(query, data, upset=True)
+
+    @staticmethod
+    def remove(collection: str, query: dict) -> dict:
+        return Database.DATABASE[collection].remove(query)

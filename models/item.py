@@ -3,20 +3,22 @@ from typing import Dict
 import requests
 from bs4 import BeautifulSoup
 import re
-from common.database import Database
+from models.model import Model
 
 
-class Item:
-    def __init__(self, url: str, tag_name: str, query: Dict, _id: str = None):
+class Item(Model):
+    collection = 'items'
+
+    def __init__(self, url: str, tag_name: str, query: Dict, _id: str = None, *args, **kwargs):
+        super().__init__(*args, **kwargs)
         self.url = url
         self.tag_name = tag_name
         self.query = query
         self.price = None
-        self.collection = 'items'
         self._id = _id or uuid.uuid4().hex
 
     def __repr__(self):
-         return f'<Item {self.url}>'
+        return f'<Item {self.url}>'
 
     def load_price(self) -> float:
         response = requests.get(self.url)
@@ -32,7 +34,6 @@ class Item:
         self.price = float(without_commas)  # 1234.0
         return self.price
 
-
     def json(self) -> Dict:
         return {
             '_id': self._id,
@@ -41,15 +42,8 @@ class Item:
             'query': self.query
         }
 
-    def save_to_mongo(self):
-        Database.insert(self.collection, self.json())
 
-    @classmethod
-    def get_by_id(cls, _id):
-        item_json = Database.find_one('items', {'_id': _id})
-        return cls(**item_json)
 
-    @classmethod
-    def all(cls):
-        items_from_db = Database.find('items', {})
-        return [cls(**item) for item in items_from_db]
+
+
+
