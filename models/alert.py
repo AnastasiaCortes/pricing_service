@@ -1,21 +1,24 @@
 import uuid
 from models.item import Item
 from models.model import Model
+from dataclasses import dataclass, field
 
 
+@dataclass(eq=False)
 class Alert(Model):
-    collection = 'alerts'
+    name: str
+    item_id: str
+    price_limit: float
+    collection: str = field(init=False, default='alerts')
+    _id: str = field(default_factory=lambda:uuid.uuid4().hex)
 
-    def __init__(self, item_id: str, price_limit: float, _id: str = None, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.item_id = item_id
-        self.item = Item.get_by_id(item_id)
-        self.price_limit = price_limit
-        self._id = _id or uuid.uuid4().hex
+    def __post_init__(self):
+        self.item = Item.get_by_id(self.item_id)
 
     def json(self) -> dict:
         return {
             '_id': self._id,
+            'name': self.name,
             'price_limit': self.price_limit,
             'item_id': self.item_id
         }

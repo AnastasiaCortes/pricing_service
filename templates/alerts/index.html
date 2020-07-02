@@ -1,20 +1,20 @@
 {% extends "base.html" %}
 {% block content %}
  <header>
-    <h1>Items</h1>
+    <h1>Alerts</h1>
 </header>
 <section>
     <div class="list-group">
-        {% for item in items %}
+        {% for alert in alerts %}
         <div class="list-group-item">
-            <h4 class="list-group-item-heading">Item</h4>
+            <h4 class="list-group-item-heading">{{ alert.name }}</h4>
             <p >
-                <a href="{{item.url}}">{{ item.url }}</a>
+                <a href="{{alert.item.url}}">{{ alert.item.id }}</a>
             </p>
         </div>
         {% endfor %}
     </div>
-    <a class="btn btn-primary mt-3" href="{{ url_for('items.create_item') }}">
+    <a class="btn btn-primary mt-3" href="{{ url_for('alerts.new_alert') }}">
         Create new
     </a>
 </section>

@@ -4,21 +4,19 @@ import requests
 from bs4 import BeautifulSoup
 import re
 from models.model import Model
+from dataclasses import dataclass, field
 
-
+@dataclass(eq=False)
 class Item(Model):
-    collection = 'items'
+    url: str
+    tag_name: str
+    query: Dict
+    collection: str = field( default='items', init=False)
+    _id: str = field(default_factory=lambda: uuid.uuid4().hex )
 
-    def __init__(self, url: str, tag_name: str, query: Dict, _id: str = None, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.url = url
-        self.tag_name = tag_name
-        self.query = query
+    def __post_init__(self):
         self.price = None
-        self._id = _id or uuid.uuid4().hex
 
-    def __repr__(self):
-        return f'<Item {self.url}>'
 
     def load_price(self) -> float:
         response = requests.get(self.url)

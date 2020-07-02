@@ -20,7 +20,7 @@ class Database:
 
     @staticmethod
     def update(collection: str, query: dict, data: dict):
-        Database.DATABASE[collection].update(query, data, upset=True)
+        Database.DATABASE[collection].update(query, data, upsert=True)
 
     @staticmethod
     def remove(collection: str, query: dict) -> dict:
